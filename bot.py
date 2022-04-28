@@ -10,7 +10,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(ctx):
-    words = ctx.content.split(' ')
+    words = ctx.content.lower().split(' ')
     if 'буфер' in words:
         image = disnake.File('./nobuffer.png','b.png')
         await ctx.delete()
