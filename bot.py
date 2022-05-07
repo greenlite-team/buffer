@@ -10,11 +10,12 @@ async def on_ready():
 
 @bot.event
 async def on_message(ctx):
-    words = ctx.content.split(' ')
-    if 'буфер' in words:
-        image = disnake.File('./nobuffer.png','b.png')
-        await ctx.delete()
-        await ctx.channel.send(f'<@{ctx.author.id}>', file=image)
+    words = ctx.content.lower().split(' ')
+    for word in config['BANWORDS']:
+        if word in words:
+            image = disnake.File('./nope.png','nope.png')
+            await ctx.delete()
+            await ctx.channel.send(f'<@{ctx.author.id}>, я запрещаю вам говорить слово `{word}`', file=image)
 
 @bot.command()
 async def ping(ctx):
