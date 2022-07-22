@@ -15,7 +15,7 @@ async def on_message(ctx):
         if word in words:
             image = disnake.File('./nope.png','nope.png')
             await ctx.delete()
-            await ctx.channel.send(f'<@{ctx.author.id}>, я запрещаю вам говорить слово `{word}`', file=image)
+            await ctx.channel.send(f'<@{ctx.author.id}>, я запрещаю вам говорить `{word}`', file=image)
 
 @bot.command()
 async def ping(ctx):
