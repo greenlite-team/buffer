@@ -5,15 +5,15 @@ with open('config.json', encoding="utf-8") as config:
 
 intents = disnake.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('b.'),intents=intents)
+bot = commands.Bot(intents=intents)
 
 @bot.event
 async def on_ready():
     print('запустился ёптить')
 
-@bot.command()
-async def ping(ctx):
-    await ctx.reply('pong')
+@bot.slash_command(description="check if the bot is running")
+async def ping(inter):
+    await inter.response.send_message(f'Pong! Running on `{os.system("uname -sr")}`')
 
 @bot.event
 async def on_message(ctx):
