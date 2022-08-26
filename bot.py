@@ -14,7 +14,7 @@ async def on_ready():
 @bot.slash_command(description="check the bot's ping")
 async def ping(inter):
     uname = subprocess.Popen(['uname', '-sr'], stdout=subprocess.PIPE)
-    output = ps.communicate()[0]
+    output = uname.communicate()[0]
     await inter.response.send_message(f'Pong! Running on `{output}` with ping of `{round(bot.latency*1000)}`')
 
 @bot.event
