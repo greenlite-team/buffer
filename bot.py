@@ -1,4 +1,4 @@
-import disnake, os, json, re
+import disnake, subprocess, json, re
 from disnake.ext import commands
 with open('config.json', encoding="utf-8") as config:
     config = json.load(config)
@@ -11,9 +11,11 @@ bot = commands.Bot(intents=intents)
 async def on_ready():
     print('запустился ёптить')
 
-@bot.slash_command(description="check if the bot is running")
+@bot.slash_command(description="check the bot's ping")
 async def ping(inter):
-    await inter.response.send_message(f'Pong! Running on `{os.system("uname -sr")}`')
+    uname = subprocess.Popen(['uname', '-sr'], stdout=subprocess.PIPE)
+    output = ps.communicate()[0]
+    await inter.response.send_message(f'Pong! Running on `{output}` with ping of `{round(bot.latency*1000)}`')
 
 @bot.event
 async def on_message(ctx):
