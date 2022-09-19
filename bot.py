@@ -1,32 +1,33 @@
-import disnake, subprocess, json, re
+import disnake, re, env
 from disnake.ext import commands
-with open('config.json', encoding="utf-8") as config:
-    config = json.load(config)
+from colorama import init, Style, Fore
+from datetime import datetime
 
+init()
 intents = disnake.Intents.default()
 intents.message_content = True
-bot = commands.Bot(intents=intents)
+bot = commands.InteractionBot(intents=intents)
 
 @bot.event
 async def on_ready():
-    print('запустился ёптить')
+    game = disnake.Game("кубы 🧊")
+    await bot.change_presence(activity=game)
+    print(f'{Fore.LIGHTBLUE_EX}[{datetime.now()}] [LAUNCH] - Loaded as {bot.user}{Style.RESET_ALL}')
 
-@bot.slash_command(description="check the bot's ping")
+@bot.slash_command(description="Проверить пинг бота")
 async def ping(inter):
-    uname = subprocess.Popen(['uname', '-sr'], stdout=subprocess.PIPE)
-    output = uname.communicate()[0]
-    await inter.response.send_message(f'Pong! Running on `{output}` with ping of `{round(bot.latency*1000)}`')
+    await inter.response.send_message(f'Pong! Ping: `{round(bot.latency*1000)} ms`')
 
 @bot.event
 async def on_message(ctx):
     if ctx.author != bot.user:
-        for word in config["BANWORDS"]:
-            regex = r'\b(' + word + r')\b'
+        for word in env.BANWORDS:
+            regex = r'\b('+word+r')\b' # прикол
             match = re.search(regex, ctx.content, re.IGNORECASE)
             if match:
                 image = disnake.File('./nope.png','nope.png')
                 await ctx.delete()
                 await ctx.channel.send(f'<@{ctx.author.id}>, я запрещаю вам говорить `{word}`', file=image)
-        await bot.process_commands(ctx)
+                print(f'{Fore.LIGHTCYAN_EX}[{datetime.now()}] [BLOCKD] - Blocked word "{word}" from {ctx.author}{Style.RESET_ALL}')
 
-bot.run(config['TOKEN'])
+bot.run(env.TOKEN)
